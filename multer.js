@@ -96,12 +96,10 @@ app.get('/fetchMultiple', (req, res) => {
     fs.readdir(upload_dir, (err, files) => {
       if (err) {
         return res.status(500).json({ error: 'Failed to read images directory' });
-      }
-  
+      }  
       if (files.length === 0) {
         return res.status(404).json({ message: 'No images found' });
-      }
-  
+      }  
       // Select a random number of images (adjust as per your requirement)
       const numberOfImages = Math.floor(Math.random() * files.length) + 1;
       const selectedImages = [];
@@ -130,8 +128,6 @@ app.route("/gallery")
         res.sendFile(path.join(__dirname, "public", "gallery.html"));
     })
     .post((req, res) => {
-        // Handle any form submissions or interactions
-        // Currently not used, but can be extended for future use
         res.redirect("/gallery");
     });
 
@@ -142,21 +138,39 @@ app.get('/fetchGalleryImages', (req, res) => {
         if (err) {
             return res.status(500).json({ error: 'Failed to read images directory' });
         }
-
         if (files.length === 0) {
             return res.status(404).json({ message: 'No images found' });
         }
-
         const imagesData = files.map(image => ({
             filename: image,
             path: `/uploads/${image}`
         }));
-
         res.json(imagesData);
     });
 });
 
+app.get('/fetch-pagination', (req, res) => {
+    const page = req.query.page || 1; // Default to page 1 if not specified
+    const pageSize = 2; // Number of items per page
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
 
+    // Example: Fetching data from the 'uploads' directory
+    const uploadDir = path.join(__dirname, 'uploads');
+    fs.readdir(uploadDir, (err, files) => {
+        if (err) {
+            console.error('Error reading directory:', err);
+            return res.status(500).json({ error: 'Failed to read images directory' });
+        }
+
+        const pageData = files.slice(startIndex, endIndex).map(filename => ({
+            filename: filename,
+            path: `/uploads/${filename}`
+        }));
+
+        res.json(pageData);
+    });
+});
 
 app.use((req, res, next) => {
     res.status(404).send("Route not found!");

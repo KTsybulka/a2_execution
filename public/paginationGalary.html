@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery with Pagination</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Gallery with Pagination</h1>
+    <div id="gallery"></div>
+    <div id="form-containe">
+        <button id="prev-btn">Previous</button>
+        <button id="next-btn">Next</button>
+        
+        <a id="return-link" href="index.html">Return home page</a>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        function fetchGallery(page) {
+            fetch(`/fetch-pagination?page=${page}`)
+                .then(response => response.json())
+                .then(data => {
+                    const galleryDiv = document.getElementById("gallery");
+                    galleryDiv.innerHTML = ""; // Clear previous content
+
+                    data.forEach(item => {
+                        const img = document.createElement("img");
+                        img.src = item.path;
+                        img.alt = item.filename;
+                        galleryDiv.appendChild(img);
+                    });
+                })
+                .catch(error => console.error('Error fetching gallery:', error));
+        }
+        document.getElementById("prev-btn").addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                fetchGallery(currentPage);
+            }
+        });
+        document.getElementById("next-btn").addEventListener("click", () => {
+            currentPage++;
+            fetchGallery(currentPage);
+        });
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchGallery(currentPage);
+        });
+    </script>
+</body>
+</html>
