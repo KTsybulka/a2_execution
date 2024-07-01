@@ -42,11 +42,16 @@ button {
     font-size: 1em;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    display: block;  /* for fetchSingl */
+    margin-bottom: 10px; /* for fetchSingl */
 }
 button:hover {
     background-color: #486dc8;
 }
-
+#return-link {
+    display: block; /* for fetchSingl */
+    margin-top: 10px; /* for fetchSingl */
+  }
 
 
 .nav-list {

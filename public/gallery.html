@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Image Gallery</h1>
+    <div id="image-container"></div>
+    <a href="index.html">Return to home page</a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("/fetchGalleryImages")
+                .then(response => response.json())
+                .then(images => {
+                    const imageContainer = document.getElementById("image-container");
+                    images.forEach(image => {
+                        const img = document.createElement("img");
+                        img.src = image.path;
+                        img.width = 200;
+                        img.style.margin = "10px";
+                        imageContainer.appendChild(img);
+                    });
+                })
+                .catch(error => console.error("Error fetching images:", error));
+        });
+    </script>
+</body>
+</html>
